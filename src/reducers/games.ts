@@ -3,7 +3,10 @@ import * as GamesActions from '../actions/games';
 export interface Game {
     _id: string;
     title: string;
+    cover: string;
 }
+
+export type PartialGame = Partial<Game>;
 
 export interface GamesState {
     items: Game[];

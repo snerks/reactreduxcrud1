@@ -18,5 +18,13 @@ mongodb.MongoClient.connect(dbUrl, (err: mongodb.MongoError, db: mongodb.Db) => 
         // res.send('Hello World!');
     });
 
+    app.use((req: any, res: any) => {
+        res.status(404).json({
+            errors: {
+                global: 'Still working on this feature.'
+            }
+        });
+    });
+
     app.listen(8080, () => console.log('server is running on localhost:8080'));
 });

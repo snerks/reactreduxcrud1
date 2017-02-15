@@ -5,3 +5,7 @@ export const OtherActionTypeValue: OtherActionType = OtherActionTypeLiteral;
 export const SetGamesActionTypeLiteral = 'Games/SetGames';
 export type SetGamesActionType = typeof SetGamesActionTypeLiteral;
 export const SetGamesActionTypeValue: SetGamesActionType = SetGamesActionTypeLiteral;
+
+export const SaveGameActionTypeLiteral = 'Games/SaveGame';
+export type SaveGameActionType = typeof SaveGameActionTypeLiteral;
+export const SaveGameActionTypeValue: SaveGameActionType = SaveGameActionTypeLiteral;

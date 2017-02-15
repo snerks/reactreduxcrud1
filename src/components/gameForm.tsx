@@ -1,21 +1,32 @@
 import * as React from 'react';
-// // import classNames from require('classnames').classames;
-// const classnames: Function = require('classnames').classnames;
 import * as classnames from 'classnames';
+import { connect } from 'react-redux';
 
-export interface GameFormProps {
+import { saveGame, ErrorWithResponse } from '../actions/gamesCreators';
+import { PartialGame } from '../reducers/games';
+import { RootState } from '../store/rootState';
+
+export interface GameFormOwnProps {
 
 }
+
+export interface GameFormDispatchProps {
+    saveGame: (game: PartialGame) => any;
+}
+
+export type GameFormProps = GameFormOwnProps & GameFormDispatchProps;
 
 export interface GameFormErrorState {
     title?: string;
     cover?: string;
+    global?: string;
 }
 
 export interface GameFormState {
     title: string;
     cover: string;
     errors: GameFormErrorState;
+    loading: boolean;
 }
 
 class GameForm extends React.Component<GameFormProps, GameFormState> {
@@ -28,18 +39,10 @@ class GameForm extends React.Component<GameFormProps, GameFormState> {
         this.state = {
             title: '',
             cover: '',
-            errors: errorState
+            errors: errorState,
+            loading: false
         };
     }
-
-    // handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    //     const { target } = e;
-    //     const { name, value } = target;
-
-    //     this.setState({
-    //         [name]: value
-    //     });
-    // }
 
     handleChange: React.ChangeEventHandler<HTMLInputElement> = (e: any) => {
         const { target } = e;
@@ -73,12 +76,40 @@ class GameForm extends React.Component<GameFormProps, GameFormState> {
         }
 
         this.setState({ errors });
+
+        const isValid = Object.keys(errors).length === 0;
+
+        if (isValid) {
+            const { title, cover } = this.state;
+
+            this.setState({ loading: true });
+
+            this.props.saveGame({ title, cover }).then(
+                // tslint:disable-next-line:no-empty
+                () => { },
+                (err: ErrorWithResponse) => {
+                    err.response.json().then(
+                        (responseAsJson: any) => {
+                            if (responseAsJson.errors) {
+                                this.setState({ errors: responseAsJson.errors, loading: false });
+                            } else {
+                                this.setState({ loading: false });
+                            }
+                        });
+                }
+            );
+        }
     }
 
     render() {
         return (
-            <form className="ui form" onSubmit={this.handleSubmit}>
+            <form className={classnames('ui', 'form', { loading: this.state.loading })} onSubmit={this.handleSubmit}>
                 <h1>Add new Game</h1>
+
+                {
+                    !!this.state.errors.global &&
+                    <div className="ui negative message"><p>{this.state.errors.global}</p></div>
+                }
 
                 <div className={classnames('field', { error: !!this.state.errors.title })}>
                     <label htmlFor="title">Title</label>
@@ -120,4 +151,7 @@ class GameForm extends React.Component<GameFormProps, GameFormState> {
     }
 }
 
-export default GameForm;
+const mapStateToProps = (state: RootState): GameFormOwnProps => ({
+});
+
+export default connect(mapStateToProps, { saveGame })(GameForm);
