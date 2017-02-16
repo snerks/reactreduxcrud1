@@ -2,7 +2,7 @@ import * as GamesActions from '../actions/games';
 import { Game, PartialGame } from '../reducers/games';
 
 export interface ErrorResponse {
-    response: any;
+    response?: any;
 }
 
 export type ErrorWithResponse = Error & ErrorResponse;

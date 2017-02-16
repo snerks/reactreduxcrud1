@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import { saveGame, ErrorWithResponse } from '../actions/gamesCreators';
 import { PartialGame } from '../reducers/games';
@@ -27,6 +28,7 @@ export interface GameFormState {
     cover: string;
     errors: GameFormErrorState;
     loading: boolean;
+    done: boolean;
 }
 
 class GameForm extends React.Component<GameFormProps, GameFormState> {
@@ -40,7 +42,8 @@ class GameForm extends React.Component<GameFormProps, GameFormState> {
             title: '',
             cover: '',
             errors: errorState,
-            loading: false
+            loading: false,
+            done: false
         };
     }
 
@@ -86,12 +89,18 @@ class GameForm extends React.Component<GameFormProps, GameFormState> {
 
             this.props.saveGame({ title, cover }).then(
                 // tslint:disable-next-line:no-empty
-                () => { },
+                () => {
+                    this.setState({ done: true, loading: false });
+                },
                 (err: ErrorWithResponse) => {
+                    if (!err.response) {
+                        this.setState({ errors: { 'global': err.message }, loading: false });
+                    }
+
                     err.response.json().then(
-                        (responseAsJson: any) => {
-                            if (responseAsJson.errors) {
-                                this.setState({ errors: responseAsJson.errors, loading: false });
+                        (responseFromJson: any) => {
+                            if (responseFromJson.errors) {
+                                this.setState({ errors: responseFromJson.errors, loading: false });
                             } else {
                                 this.setState({ loading: false });
                             }
@@ -102,7 +111,7 @@ class GameForm extends React.Component<GameFormProps, GameFormState> {
     }
 
     render() {
-        return (
+        const form = (
             <form className={classnames('ui', 'form', { loading: this.state.loading })} onSubmit={this.handleSubmit}>
                 <h1>Add new Game</h1>
 
@@ -147,6 +156,12 @@ class GameForm extends React.Component<GameFormProps, GameFormState> {
                     <button className="ui primary button">Save</button>
                 </div>
             </form>
+        );
+
+        return (
+            <div>
+                {this.state.done ? <Redirect to="/games" /> : form}
+            </div>
         );
     }
 }
