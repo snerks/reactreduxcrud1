@@ -9,3 +9,7 @@ export const SetGamesActionTypeValue: SetGamesActionType = SetGamesActionTypeLit
 export const SaveGameActionTypeLiteral = 'Games/SaveGame';
 export type SaveGameActionType = typeof SaveGameActionTypeLiteral;
 export const SaveGameActionTypeValue: SaveGameActionType = SaveGameActionTypeLiteral;
+
+export const AddGameActionTypeLiteral = 'Games/AddGame';
+export type AddGameActionType = typeof AddGameActionTypeLiteral;
+export const AddGameActionTypeValue: AddGameActionType = AddGameActionTypeLiteral;

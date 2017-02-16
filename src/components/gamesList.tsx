@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Game } from '../reducers/games';
+import GameCard from './gameCard';
 
 interface GamesListProps {
     games: Game[];
@@ -11,13 +12,9 @@ const GamesList: React.SFC<GamesListProps> = ({ games }) => {
         <p>There are no games yet.</p>
     );
 
-    const gamesUl = games.map((game: Game) => <li key={game._id}>{game.title}</li>);
-
     const gamesList = (
-        <div>
-            <p>Games List</p>
-
-            {gamesUl}
+        <div className="ui four cards">
+            {games.map((game: Game) => <GameCard key={game._id} game={game} />)}
         </div>
     );
 

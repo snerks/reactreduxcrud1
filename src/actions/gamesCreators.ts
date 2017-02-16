@@ -24,6 +24,13 @@ export function setGames(games: Game[]) {
     };
 }
 
+function addGame(game: PartialGame) {
+    return {
+        type: GamesActions.AddGameActionTypeValue,
+        game
+    };
+}
+
 export function saveGame(game: PartialGame) {
     // return {
     //     type: GamesActions.SaveGameActionTypeValue,
@@ -36,7 +43,8 @@ export function saveGame(game: PartialGame) {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(handleResponse);
+        }).then(handleResponse)
+            .then((data: any) => dispatch(addGame(data.game)));
     };
 }
 

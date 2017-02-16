@@ -13,36 +13,17 @@ export interface GamesState {
 }
 
 export const initialGamesState: GamesState = {
-    // kind: '',
-    // area: 0
     items: []
 };
-
-// export interface SquareAction {
-//     type: ShapeActions.SquareActionType;
-//     size: number;
-// }
-
-// interface RectangleAction {
-//     type: ShapeActions.RectangleActionType;
-//     width: number;
-//     height: number;
-// }
-
-// interface CircleAction {
-//     type: ShapeActions.CircleActionType;
-//     radius: number;
-// }
-
-// interface TriangleAction {
-//     type: ShapeActions.TriangleActionType;
-//     base: number;
-//     height: number;
-// }
 
 interface SetGamesAction {
     type: GamesActions.SetGamesActionType;
     games: Game[];
+}
+
+interface AddGameAction {
+    type: GamesActions.AddGameActionType;
+    game: Game;
 }
 
 interface OtherAction {
@@ -55,6 +36,7 @@ const otherActionInstance: OtherAction = {
 
 type GamesAction =
     SetGamesAction |
+    AddGameAction |
     OtherAction;
 
 export default function games(
@@ -62,20 +44,16 @@ export default function games(
     action: GamesAction = otherActionInstance): GamesState {
 
     switch (action.type) {
-        // case ShapeActions.SquareActionTypeValue:
-        //     return { kind: action.type, area: action.size * action.size };
-
-        // case ShapeActions.RectangleActionTypeValue:
-        //     return { kind: action.type, area: action.width * action.height };
-
-        // case ShapeActions.CircleActionTypeValue:
-        //     return { kind: action.type, area: Math.PI * action.radius * action.radius };
-
-        // case ShapeActions.TriangleActionTypeValue:
-        //     return { kind: action.type, area: action.base / 2 * action.height };
-
         case GamesActions.SetGamesActionTypeValue:
             return { items: action.games };
+
+        case GamesActions.AddGameActionTypeValue:
+            return {
+                items: [
+                    ...state.items,
+                    action.game
+                ]
+            };
 
         default:
             return state;

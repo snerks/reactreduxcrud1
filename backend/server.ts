@@ -5,7 +5,7 @@ import * as bodyParser from 'body-parser';
 const app = express();
 app.use(bodyParser.json());
 
-const dbUrl: string = 'mongodb://127.0.0.1:27017/crudewithredux';
+const dbUrl: string = 'mongodb://127.0.0.1:27017/crudwithredux';
 
 export interface Game {
     _id: string;
