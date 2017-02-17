@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import { Game } from '../reducers/games';
 
@@ -16,7 +17,12 @@ const GameCard: React.SFC<GameCardProps> = ({ game }) => {
             <div className="content">
                 <div className="header">{game.title}</div>
             </div>
-
+            <div className="extra content">
+                <div className="ui two buttons">
+                    <Link to={'/game/' + game._id} className="ui basic button green">Edit</Link>
+                    {/*<Link className="ui basic button red">Delete</Link>*/}
+                </div>
+            </div>
         </div>
     );
 };

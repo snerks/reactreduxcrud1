@@ -26,6 +26,11 @@ interface AddGameAction {
     game: Game;
 }
 
+interface GameFetchedAction {
+    type: GamesActions.GameFetchedActionType;
+    game: Game;
+}
+
 interface OtherAction {
     type: GamesActions.OtherActionType;
 }
@@ -37,6 +42,7 @@ const otherActionInstance: OtherAction = {
 type GamesAction =
     SetGamesAction |
     AddGameAction |
+    GameFetchedAction |
     OtherAction;
 
 export default function games(
@@ -55,6 +61,31 @@ export default function games(
                 ]
             };
 
+        case GamesActions.GameFetchedActionTypeValue:
+            const index = state.items.findIndex(item => item._id === action.game._id);
+
+            if (index > -1) {
+                const newItems = state.items.map(item => {
+                    if (item._id === action.game._id) {
+                        return action.game;
+                    }
+
+                    return item;
+                });
+
+                return {
+                    items: newItems
+                };
+            } else {
+                return {
+                    items: [
+                        ...state.items,
+                        action.game
+                    ]
+                };
+            }
+
+        // tslint:disable-next-line:no-switch-case-fall-through
         default:
             return state;
     }

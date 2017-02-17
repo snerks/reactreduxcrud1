@@ -83,6 +83,16 @@ mongodb.MongoClient.connect(dbUrl, (err: mongodb.MongoError, db: mongodb.Db) => 
         }
     });
 
+    app.get('/api/game/:_id', (req: express.Request, res: express.Response) => {
+        console.log(req.params);
+
+        db.collection('games').findOne(
+            { _id: new mongodb.ObjectID(req.params._id) },
+            (err1: mongodb.MongoError, game: any) => {
+                res.json({ game });
+            });
+    });
+
     app.use((req: express.Request, res: express.Response) => {
         res.status(404).json({
             errors: {

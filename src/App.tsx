@@ -19,8 +19,7 @@ class App extends React.Component<null, null> {
 
         <Route exact path="/games" component={GamesPage} />
         <Route exact path="/games/new" component={GameForm} />
-        {/*
-        <Route exact path="/games/:_id" component={GameFormPage} />*/}
+        <Route exact path="/game/:_id" component={GameForm} />
       </div>
     );
   }

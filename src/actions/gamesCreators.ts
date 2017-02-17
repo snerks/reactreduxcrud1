@@ -55,3 +55,18 @@ export function fetchGames() {
             .then(data => dispatch(setGames(data.games)));
     };
 }
+
+export function gameFetched(game: Game) {
+    return {
+        type: GamesActions.GameFetchedActionTypeValue,
+        game
+    };
+}
+
+export function fetchGame(id: string) {
+    return (dispatch: Function) => {
+        fetch('/api/game/' + id)
+            .then(res => res.json())
+            .then(data => dispatch(gameFetched(data.game)));
+    };
+}

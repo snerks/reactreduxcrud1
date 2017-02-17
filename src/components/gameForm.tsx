@@ -3,16 +3,22 @@ import * as classnames from 'classnames';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { saveGame, ErrorWithResponse } from '../actions/gamesCreators';
-import { PartialGame } from '../reducers/games';
+import { saveGame, fetchGame, ErrorWithResponse } from '../actions/gamesCreators';
+import { Game, PartialGame } from '../reducers/games';
 import { RootState } from '../store/rootState';
 
-export interface GameFormOwnProps {
+export interface GameRouterParams {
+    _id?: string;
+}
 
+export interface GameFormOwnProps {
+    params?: GameRouterParams;
+    game?: Game;
 }
 
 export interface GameFormDispatchProps {
     saveGame: (game: PartialGame) => any;
+    fetchGame: (id: string) => any;
 }
 
 export type GameFormProps = GameFormOwnProps & GameFormDispatchProps;
@@ -24,6 +30,7 @@ export interface GameFormErrorState {
 }
 
 export interface GameFormState {
+    _id: string | null;
     title: string;
     cover: string;
     errors: GameFormErrorState;
@@ -39,12 +46,41 @@ class GameForm extends React.Component<GameFormProps, GameFormState> {
         const errorState: GameFormErrorState = {};
 
         this.state = {
-            title: '',
-            cover: '',
+            _id: props.game ? props.game!._id : null,
+            title: props.game ? props.game!.title : '',
+            cover: props.game ? props.game!.cover : '',
             errors: errorState,
             loading: false,
             done: false
         };
+    }
+
+    componentWillReceiveProps = (nextProps: any) => {
+        this.setState({
+            _id: nextProps.game._id,
+            title: nextProps.game.title,
+            cover: nextProps.game.cover,
+        });
+    }
+
+    componentDidMount = () => {
+        const routerProps: any = this.props;
+
+        if (!routerProps.match) {
+            return;
+        }
+
+        const { match } = routerProps;
+
+        if (!match.params) {
+            return;
+        }
+
+        const { params } = match;
+
+        if (params && params._id) {
+            this.props.fetchGame(params._id);
+        }
     }
 
     handleChange: React.ChangeEventHandler<HTMLInputElement> = (e: any) => {
@@ -166,7 +202,26 @@ class GameForm extends React.Component<GameFormProps, GameFormState> {
     }
 }
 
-const mapStateToProps = (state: RootState): GameFormOwnProps => ({
-});
+// const mapStateToProps = (state: RootState, reduxRrops: any): GameFormOwnProps => ({
 
-export default connect(mapStateToProps, { saveGame })(GameForm);
+//     // re
+
+//     // if(reduxRrops.params._id) {
+//     //     return {
+//     //         game: state.games.items.find(item => item._id === reduxRrops.params._id)
+//     //     };
+//     // }
+// });
+
+function mapStateToProps(state: RootState, ownProps: any) {
+    if (ownProps.match && ownProps.match.params && ownProps.match.params._id) {
+        const matchedGame = state.games.items.find(item => item && item._id === ownProps.match.params!._id);
+        return {
+            game: matchedGame
+        };
+    }
+
+    return { game: null };
+}
+
+export default connect(mapStateToProps, { saveGame, fetchGame })(GameForm as any);

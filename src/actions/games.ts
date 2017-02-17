@@ -13,3 +13,7 @@ export const SaveGameActionTypeValue: SaveGameActionType = SaveGameActionTypeLit
 export const AddGameActionTypeLiteral = 'Games/AddGame';
 export type AddGameActionType = typeof AddGameActionTypeLiteral;
 export const AddGameActionTypeValue: AddGameActionType = AddGameActionTypeLiteral;
+
+export const GameFetchedActionTypeLiteral = 'Games/GameFetched';
+export type GameFetchedActionType = typeof GameFetchedActionTypeLiteral;
+export const GameFetchedActionTypeValue: GameFetchedActionType = GameFetchedActionTypeLiteral;
